@@ -21,6 +21,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String vaccancy;
 
 	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Designation> designations;
@@ -37,10 +38,24 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public Department() {
 		super();
 		
 	}
+	public String getVaccancy() {
+		return vaccancy;
+	}
+	public void setVaccancy(String vaccancy) {
+		this.vaccancy = vaccancy;
+	}
+	
+//	public List<Designation> getDesignations() {
+//		return designations;
+//	}
+//	public void setDesignations(List<Designation> designations) {
+//		this.designations = designations;
+//	}
 
 	
 }

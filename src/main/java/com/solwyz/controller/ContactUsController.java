@@ -80,5 +80,16 @@ public class ContactUsController {
 	    counts.put("websiteAuditCount", auditRepo.count());
 	    return ResponseEntity.ok(counts);
 	}
+	
+	
+	@GetMapping("/filter-by-date")
+	public ResponseEntity<ApiResponse<List<ContactUs>>> getContactsByDateRange(
+	        @RequestParam String startDate,
+	        @RequestParam String endDate) {
+
+	    List<ContactUs> filteredContacts = contactUsService.getContactsByDateRange(startDate, endDate);
+	    return ResponseEntity.ok(new ApiResponse<>("success", filteredContacts));
+	}
+
 
 }
