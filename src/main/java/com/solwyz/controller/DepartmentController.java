@@ -2,6 +2,7 @@ package com.solwyz.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,18 +39,13 @@ public class DepartmentController {
 		return ResponseEntity.ok(categoryService.addCategory(category));
 	}
 	
-	@GetMapping("/all")
-	public ResponseEntity<ApiResponse<List<Department>>> getAllCategories() {
-	    List<Department> categories = categoryService.getAllCategories();
-	    return ResponseEntity.ok(new ApiResponse<>("success", categories));
-	}
 
+	@GetMapping("/all")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAllDepartments() {
+	    return ResponseEntity.ok(new ApiResponse<>("success", categoryService.getAllDepartmentsWithApplicantCount()));
+	}
 	
-//	@GetMapping("/{id}")
-//	public ResponseEntity<ApiResponse<Department>> getCategoryById(@PathVariable Long id) {
-//	    Department category = categoryService.getCategoryById(id);
-//	    return ResponseEntity.ok(new ApiResponse<>("success", category));
-//	}
+
 	
 
 	@GetMapping("/{departmentId}")

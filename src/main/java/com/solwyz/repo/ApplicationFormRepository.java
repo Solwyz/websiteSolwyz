@@ -12,4 +12,10 @@ public interface ApplicationFormRepository extends JpaRepository<ApplicationForm
 
 	List<ApplicationForm> findByDesignationId(Long designationId);
 
+	List<ApplicationForm> findByDepartmentIdAndDesignationId(Long departmentId, Long designationId);
+
+	long countByDesignationDepartmentId(Long id);
+
+	long countByDesignationId(Long id);
+
 }

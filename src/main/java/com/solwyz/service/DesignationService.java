@@ -1,6 +1,9 @@
 package com.solwyz.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,9 +12,12 @@ import com.solwyz.entity.Department;
 import com.solwyz.entity.Designation;
 import com.solwyz.entity.JobDetails;
 import com.solwyz.exception.ResourceNotFoundException;
+import com.solwyz.repo.ApplicationFormRepository;
 import com.solwyz.repo.DepartmentRepository;
 import com.solwyz.repo.DesignationRepository;
 import com.solwyz.repo.JobDetailsRepository;
+
+
 
 @Service
 public class DesignationService {
@@ -24,6 +30,9 @@ public class DesignationService {
 	
 	@Autowired
 	private JobDetailsRepository jobDetailsRepository;
+	
+	@Autowired
+	private ApplicationFormRepository applicantRepository;
 	
 	public Designation addDesignation(Designation designation) {
 	    
@@ -71,4 +80,24 @@ public class DesignationService {
 		return designationRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("designation not found with id: " + id));
 	}
+
+
+	public List<Map<String, Object>> getDesignationsByDepartment(Long departmentId) {
+	    List<Designation> designations = designationRepository.findByDepartmentId(departmentId);
+	    List<Map<String, Object>> result = new ArrayList<>();
+
+	    for (Designation des : designations) {
+	        long count = applicantRepository.countByDesignationId(des.getId());
+
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("id", des.getId());
+	        map.put("name", des.getName());
+	        map.put("experience", des.getExperience());
+	        map.put("applicantCount", count);
+	        result.add(map);
+	    }
+
+	    return result;
+	}
+
 }

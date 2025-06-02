@@ -42,13 +42,14 @@ public class ApplicationFormController {
 	        @RequestParam String phoneNo,
 	        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
 	        @RequestParam String highestQualification,
-	        @RequestParam Long designationId, 
+	        @RequestParam Long designationId,
+	        @RequestParam Long departmentId,  
 	        @RequestPart("resume") MultipartFile resumeFile) throws IOException {
 
 	    ApplicationForm savedApplication = applicationFormService.createApplication(
-	            name, email, phoneNo, dateOfBirth, highestQualification, designationId, resumeFile);
+	            name, email, phoneNo, dateOfBirth, highestQualification, designationId, departmentId, resumeFile);
 
-	    return ResponseEntity.status(HttpStatus.CREATED).body(savedApplication);
+	    return ResponseEntity.status(HttpStatus.OK).body(savedApplication);
 	}
 
     @GetMapping("/all")
@@ -64,11 +65,15 @@ public class ApplicationFormController {
     }
     
     //byDesignation-list by designation
-    @GetMapping("/all/{designationId}")
-    public ResponseEntity<Map<String, Object>> getApplicationsByDesignation(@PathVariable Long designationId) {
-        Map<String, Object> response = applicationFormService.getApplicationsByDesignationId(designationId);
+    @GetMapping("/all/{departmentId}/designation/{designationId}")
+    public ResponseEntity<Map<String, Object>> getApplicationsByDepartmentAndDesignation(
+            @PathVariable Long departmentId,
+            @PathVariable Long designationId) {
+
+        Map<String, Object> response = applicationFormService.getApplicationsByDepartmentAndDesignation(departmentId, designationId);
         return ResponseEntity.ok(response);
     }
+
 
 
 //    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

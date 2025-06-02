@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.solwyz.entity.ApplicationForm;
+import com.solwyz.entity.Department;
 import com.solwyz.entity.Designation;
 import com.solwyz.repo.ApplicationFormRepository;
+import com.solwyz.repo.DepartmentRepository;
 import com.solwyz.repo.DesignationRepository;
 
 @Service
@@ -30,23 +32,29 @@ public class ApplicationFormService {
     @Autowired
     private DesignationRepository designationRepository;
     
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    
+    
+    
     public ApplicationForm createApplication(
             String name,
             String email,
             String phoneNo,
             LocalDate dateOfBirth,
             String highestQualification,
-            Long designationId, 
+            Long designationId,
+            Long departmentId, 
             MultipartFile resumeFile) throws IOException {
 
-        
         String resumeUrl = cloudinaryService.uploadPdf(resumeFile);
 
-       
         Designation designation = designationRepository.findById(designationId)
                 .orElseThrow(() -> new RuntimeException("Designation not found"));
 
-        
+        Department department = departmentRepository.findById(departmentId)  
+                .orElseThrow(() -> new RuntimeException("Department not found"));
+
         ApplicationForm applicationForm = new ApplicationForm();
         applicationForm.setName(name);
         applicationForm.setEmail(email);
@@ -54,9 +62,9 @@ public class ApplicationFormService {
         applicationForm.setDateOfBirth(dateOfBirth);
         applicationForm.setHighestQualification(highestQualification);
         applicationForm.setResumeUrl(resumeUrl);
-        applicationForm.setDesignation(designation); 
+        applicationForm.setDesignation(designation);
+        applicationForm.setDepartment(department);  
 
-        
         notificationService.createNotification("New job application received");
 
         return applicationFormRepository.save(applicationForm);
@@ -101,8 +109,19 @@ public class ApplicationFormService {
     }
 
     
-    public Map<String, Object> getApplicationsByDesignationId(Long designationId) {
-        List<ApplicationForm> applications = applicationFormRepository.findByDesignationId(designationId);
+//    public Map<String, Object> getApplicationsByDesignationId(Long designationId) {
+//        List<ApplicationForm> applications = applicationFormRepository.findByDesignationId(designationId);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("count", applications.size());
+//        response.put("applications", applications);
+//
+//        return response;
+//    }
+
+
+    public Map<String, Object> getApplicationsByDepartmentAndDesignation(Long departmentId, Long designationId) {
+        List<ApplicationForm> applications = applicationFormRepository.findByDepartmentIdAndDesignationId(departmentId, designationId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("count", applications.size());
@@ -110,4 +129,5 @@ public class ApplicationFormService {
 
         return response;
     }
+
 }

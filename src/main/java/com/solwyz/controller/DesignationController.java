@@ -1,6 +1,7 @@
 package com.solwyz.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,14 @@ public class DesignationController {
         List<Designation> designations = designationService.getAllDesignation();
         return ResponseEntity.ok(new ApiResponse<>("success", designations));
     }
+    
+    @GetMapping("/{departmentId}")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getDesignationsByDepartment(
+            @PathVariable Long departmentId) {
+        return ResponseEntity.ok(new ApiResponse<>("success", designationService.getDesignationsByDepartment(departmentId)));
+    }
 
-    @GetMapping("/{id}")
+    @GetMapping("/byId/{id}")
     public ResponseEntity<ApiResponse<Designation>> getDesignationById(@PathVariable Long id) {
         Designation designation = designationService.getDesignationById(id);
         return ResponseEntity.ok(new ApiResponse<>("success", designation));
