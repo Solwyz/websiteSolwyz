@@ -75,25 +75,25 @@ public class AuthController {
 	    return ResponseEntity.ok(new AuthenticationResponse(jwt, refreshToken.getToken()));
 	}
 
-	@PostMapping("/resetPassword")
-	public ResponseEntity<MessageResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-	    String username = resetPasswordRequest.getUsername();
-
-	    Optional<User> user = userRepository.findByUsername(username);
-
-	    if (user.isEmpty()) {
-	    
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body(new MessageResponse("User not found with the provided username"));
-	    }
-
-	    String token = UUID.randomUUID().toString();
-	    userService.createPasswordResetTokenForUser(user.get(), token);
-	    userService.sendResetTokenEmail(token, user.get());
-
-	   
-	    return ResponseEntity.ok(new MessageResponse("Reset Password Link Sent to Registered Email or Mobile"));
-	}
+//	@PostMapping("/resetPassword")
+//	public ResponseEntity<MessageResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+//	    String username = resetPasswordRequest.getUsername();
+//
+//	    Optional<User> user = userRepository.findByUsername(username);
+//
+//	    if (user.isEmpty()) {
+//	    
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//	                .body(new MessageResponse("User not found with the provided username"));
+//	    }
+//
+//	    String token = UUID.randomUUID().toString();
+//	    userService.createPasswordResetTokenForUser(user.get(), token);
+//	    userService.sendResetTokenEmail(token, user.get());
+//
+//	   
+//	    return ResponseEntity.ok(new MessageResponse("Reset Password Link Sent to Registered Email or Mobile"));
+//	}
 
  
 

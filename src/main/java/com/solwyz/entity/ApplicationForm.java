@@ -1,6 +1,9 @@
 package com.solwyz.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,10 +34,16 @@ public class ApplicationForm {
 	@Column(name = "resume_url", length = 2048)
 	private String resumeUrl;
 
+	 @CreationTimestamp
+	 private LocalDateTime createdAt;
 	
 	 @ManyToOne
 	 @JoinColumn(name = "designation_id")
 	 private Designation designation;
+	 
+	 @ManyToOne
+	 @JoinColumn(name = "department_id")
+	 private Department department;
 	 
 	public Long getId() {
 		return id;
@@ -104,5 +113,22 @@ public class ApplicationForm {
 	public void setDesignation(Designation designation) {
 		this.designation = designation;
 	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 
 }
