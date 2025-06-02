@@ -67,6 +67,7 @@ public class DepartmentService {
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("id", dept.getId());
 	        map.put("name", dept.getName());
+	        map.put("vaccancy",dept.getVaccancy());
 	        map.put("applicantCount", count);
 	        result.add(map);
 	    }

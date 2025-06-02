@@ -1,5 +1,7 @@
 package com.solwyz.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,23 @@ public class ContactUsService {
 		    Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 		    return contactUsRepository.findAll(pageable);
 		}
+
+	
+	 
+	 public List<ContactUs> getContactsByDateRange(String startDate, String endDate) {
+		    // Parse input dates
+		    LocalDate start = LocalDate.parse(startDate);
+		    LocalDate end = LocalDate.parse(endDate);
+
+		    // Validate that start is not after end
+		    if (start.isAfter(end)) {
+		        throw new IllegalArgumentException("Start date must not be after end date");
+		    }
+
+		    // Fetch from repository
+		    return contactUsRepository.findByCreatedAtBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+		}
+
 
 //	public long getEnquiryCount() {
 //		
