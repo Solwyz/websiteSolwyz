@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.solwyz.entity.Designation;
+import com.solwyz.enums.Status;
 import com.solwyz.pojo.response.ApiResponse;
 import com.solwyz.service.DesignationService;
 
@@ -38,7 +39,7 @@ public class DesignationController {
         return ResponseEntity.ok(new ApiResponse<>("success", designationService.getDesignationsByDepartment(departmentId)));
     }
 
-    @GetMapping("/byId/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ApiResponse<Designation>> getDesignationById(@PathVariable Long id) {
         Designation designation = designationService.getDesignationById(id);
         return ResponseEntity.ok(new ApiResponse<>("success", designation));
@@ -55,4 +56,13 @@ public class DesignationController {
         Designation updatedDesignation = designationService.updateDesignation(id, designation);
         return new ResponseEntity<>(new ApiResponse<>("Designation updated successfully", updatedDesignation), HttpStatus.OK);
     }
+    
+    @PatchMapping("status/{id}")
+    public ResponseEntity<Designation> updateDesignationStatus(
+            @PathVariable Long id,
+            @RequestParam Status status) {
+        Designation updated = designationService.updateDesignationStatus(id, status);
+        return ResponseEntity.ok(updated);
+    }
+
 }

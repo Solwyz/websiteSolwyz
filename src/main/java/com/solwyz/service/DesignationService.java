@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.solwyz.entity.Department;
 import com.solwyz.entity.Designation;
 import com.solwyz.entity.JobDetails;
+import com.solwyz.enums.Status;
 import com.solwyz.exception.ResourceNotFoundException;
 import com.solwyz.repo.ApplicationFormRepository;
 import com.solwyz.repo.DepartmentRepository;
@@ -35,17 +36,25 @@ public class DesignationService {
 	private ApplicationFormRepository applicantRepository;
 	
 	public Designation addDesignation(Designation designation) {
-	    
+
+	    // Fetch and set department if provided with a valid ID
 	    if (designation.getDepartment() != null && designation.getDepartment().getId() != null) {
 	        Department department = departmentRepository.findById(designation.getDepartment().getId())
 	                .orElseThrow(() -> new RuntimeException("Department not found"));
 	        designation.setDepartment(department);
 	    }
 
-	    
-	    if (designation.getJobDetails() != null && designation.getJobDetails().getId() != null) {
-	        JobDetails jobDetails = jobDetailsRepository.findById(designation.getJobDetails().getId())
-	                .orElseThrow(() -> new RuntimeException("JobDetails not found"));
+	    // Handle creation of new JobDetails if ID is null or zero
+	    JobDetails jobDetails = designation.getJobDetails();
+	    if (jobDetails != null) {
+	        if (jobDetails.getId() == null || jobDetails.getId() == 0) {
+	            // Treat it as a new JobDetails object
+	            jobDetails = jobDetailsRepository.save(jobDetails);
+	        } else {
+	            // Optional: allow linking an existing one
+	            jobDetails = jobDetailsRepository.findById(jobDetails.getId())
+	                    .orElseThrow(() -> new RuntimeException("JobDetails not found"));
+	        }
 	        designation.setJobDetails(jobDetails);
 	    }
 
@@ -66,15 +75,18 @@ public class DesignationService {
 	}
 
 	public Designation updateDesignation(Long id, Designation designation) {
+		
+	    Designation existingDesignation = designationRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException(id + " does not exist"));
 
-		Designation existingdesignation = designationRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException(id + " does not exist"));
+	    existingDesignation.setName(designation.getName());
+	    existingDesignation.setExperience(designation.getExperience());
 
-		existingdesignation.setName(designation.getName());
-		existingdesignation.setExperience(designation.getExperience());
-
-		return designationRepository.save(existingdesignation);
+	    
+	    return designationRepository.save(existingDesignation);
 	}
+
+
 
 	public Designation getDesignationById(Long id) {
 		return designationRepository.findById(id)
@@ -94,10 +106,21 @@ public class DesignationService {
 	        map.put("name", des.getName());
 	        map.put("experience", des.getExperience());
 	        map.put("applicantCount", count);
+	        map.put("status", des.getStatus());
 	        result.add(map);
 	    }
 
 	    return result;
 	}
+
+
+	public Designation updateDesignationStatus(Long id, Status newStatus) {
+	    Designation designation = designationRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Designation with id " + id + " not found"));
+
+	    designation.setStatus(newStatus);
+	    return designationRepository.save(designation);
+	}
+
 
 }

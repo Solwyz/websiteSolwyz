@@ -1,7 +1,12 @@
 package com.solwyz.entity;
 
+import com.solwyz.enums.Status;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +24,11 @@ public class Designation {
 	private Long id;
 	private String name;
 	private String experience;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Status status;
+
 
 	@ManyToOne
 	@JoinColumn(name = "department_id")
@@ -83,6 +93,14 @@ public class Designation {
 
 	public void setJobDetails(JobDetails jobDetails) {
 		this.jobDetails = jobDetails;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 }
