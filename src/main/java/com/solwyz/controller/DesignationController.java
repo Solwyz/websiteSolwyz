@@ -13,9 +13,12 @@ import com.solwyz.enums.Status;
 import com.solwyz.pojo.response.ApiResponse;
 import com.solwyz.service.DesignationService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/designation")
+@Tag(name = "Designation Authentication", description = "APIs for All designation page")
 public class DesignationController {
 
     @Autowired
@@ -39,9 +42,9 @@ public class DesignationController {
         return ResponseEntity.ok(new ApiResponse<>("success", designationService.getDesignationsByDepartment(departmentId)));
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<ApiResponse<Designation>> getDesignationById(@PathVariable Long id) {
-        Designation designation = designationService.getDesignationById(id);
+    @GetMapping("/id/{designationId}")
+    public ResponseEntity<ApiResponse<Designation>> getDesignationById(@PathVariable Long designationId) {
+        Designation designation = designationService.getDesignationById(designationId);
         return ResponseEntity.ok(new ApiResponse<>("success", designation));
     }
 

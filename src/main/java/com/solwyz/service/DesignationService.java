@@ -75,22 +75,47 @@ public class DesignationService {
 	}
 
 	public Designation updateDesignation(Long id, Designation designation) {
-		
 	    Designation existingDesignation = designationRepository.findById(id)
 	            .orElseThrow(() -> new RuntimeException(id + " does not exist"));
 
 	    existingDesignation.setName(designation.getName());
 	    existingDesignation.setExperience(designation.getExperience());
+	    existingDesignation.setStatus(designation.getStatus());
 
-	    
+	    if (designation.getJobDetails() != null) {
+	        JobDetails existingJobDetails = existingDesignation.getJobDetails();
+	        JobDetails newJobDetails = designation.getJobDetails();
+
+	        if (existingJobDetails == null) {
+	            existingJobDetails = new JobDetails();
+	        }
+
+	        existingJobDetails.setDesignation(newJobDetails.getDesignation());
+	        existingJobDetails.setLoaction(newJobDetails.getLoaction());
+	        existingJobDetails.setExperience(newJobDetails.getExperience());
+	        existingJobDetails.setJobType(newJobDetails.getJobType());
+	        existingJobDetails.setQualification(newJobDetails.getQualification());
+	        existingJobDetails.setEmailId(newJobDetails.getEmailId());
+	        existingJobDetails.setResponsibilities(newJobDetails.getResponsibilities());
+	        existingJobDetails.setRequirements(newJobDetails.getRequirements());
+
+	        existingDesignation.setJobDetails(existingJobDetails);
+	    }
+
+	   
+	    if (designation.getDepartment() != null) {
+	        existingDesignation.setDepartment(designation.getDepartment());
+	    }
+
 	    return designationRepository.save(existingDesignation);
 	}
 
 
 
-	public Designation getDesignationById(Long id) {
-		return designationRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("designation not found with id: " + id));
+
+	public Designation getDesignationById(Long designationId) {
+		return designationRepository.findById(designationId)
+				.orElseThrow(() -> new ResourceNotFoundException("designation not found with id: " + designationId));
 	}
 
 
