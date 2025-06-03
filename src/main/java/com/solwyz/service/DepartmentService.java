@@ -53,9 +53,9 @@ public class DepartmentService {
 
 
 
-	public List<Designation> getDesignationsByDepartment(Long departmentId) {
-	    return designationRepository.findByDepartmentId(departmentId);
-	}
+//	public List<Designation> getDesignationsByDepartment(Long departmentId) {
+//	    return designationRepository.findByDepartmentId(departmentId);
+//	}
 
 	public List<Map<String, Object>> getAllDepartmentsWithApplicantCount() {
 	    List<Department> departments = departmentRepository.findAll();

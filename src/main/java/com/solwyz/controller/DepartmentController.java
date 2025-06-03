@@ -48,11 +48,11 @@ public class DepartmentController {
 
 	
 
-	@GetMapping("/{departmentId}")
-	public ResponseEntity<ApiResponse<List<Designation>>> getDesignationsByDepartment(@PathVariable Long departmentId) {
-	    List<Designation> designations = categoryService.getDesignationsByDepartment(departmentId);
-	    return ResponseEntity.ok(new ApiResponse<>("success", designations));
-	}
+//	@GetMapping("/{departmentId}")
+//	public ResponseEntity<ApiResponse<List<Designation>>> getDesignationsByDepartment(@PathVariable Long departmentId) {
+//	    List<Designation> designations = categoryService.getDesignationsByDepartment(departmentId);
+//	    return ResponseEntity.ok(new ApiResponse<>("success", designations));
+//	}
 
 
 	 @DeleteMapping("/delete/{id}")

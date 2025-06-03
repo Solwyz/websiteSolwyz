@@ -22,9 +22,12 @@ import com.solwyz.entity.Blog;
 import com.solwyz.pojo.response.ApiResponse;
 import com.solwyz.service.BlogService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/blog")
+@Tag(name = "blog Authentication", description = "APIs for All blog page")
 public class BlogController {
 	
 	  @Autowired
