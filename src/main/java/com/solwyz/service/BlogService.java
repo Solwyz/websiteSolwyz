@@ -48,30 +48,7 @@ public class BlogService {
     }
 
 
-   
-   
-//    public Blog updateBlog(Long id, String title, String shortDescription, String blogShortDescription, MultipartFile imageFile) {
-//        Blog existingBlog = blogRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Blog not found with id " + id));
-//
-//        existingBlog.setTitle(title);
-//        existingBlog.setShortDescription(shortDescription);
-//        existingBlog.setBlogShortDescription(blogShortDescription);
-//       // existingBlog.setParagraph(paragraph);
-//
-//        if (imageFile != null && !imageFile.isEmpty()) {
-//            try {
-//                String imageUrl = awsS3Service.uploadFile(imageFile);
-//                existingBlog.setImage(imageUrl);
-//            } catch (IOException e) {
-//                
-//                throw new RuntimeException("Failed to upload image", e);
-//            }
-//        }
-//
-//        return blogRepository.save(existingBlog);
-//    }
-
+ 
 
     public void deleteBlog(Long id) {
         if (!blogRepository.existsById(id)) {
@@ -83,6 +60,27 @@ public class BlogService {
         return blogRepository.findTop3ByIdNotOrderByCreatedAtDesc(excludedId);
     }
 
+
+
+    public Blog updateBlog(Long id, String title, String shortDescription, List<String> paragraphss, MultipartFile imageFile) {
+        Blog existingBlog = blogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Blog not found with id: " + id));
+
+        existingBlog.setTitle(title);
+        existingBlog.setShortDescription(shortDescription);
+        existingBlog.setParagraphss(paragraphss);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String imageUrl = awsS3Service.uploadFile(imageFile);
+                existingBlog.setImage(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload blog image to S3", e);
+            }
+        }
+
+        return blogRepository.save(existingBlog);
+    }
 
    
    

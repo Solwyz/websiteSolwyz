@@ -1,6 +1,5 @@
 package com.solwyz.controller;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -24,46 +23,34 @@ import com.solwyz.service.DepartmentService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/departments")
 @Tag(name = "department Authentication", description = "APIs for All department page")
 public class DepartmentController {
-	
+
 	@Autowired
 	private DepartmentService categoryService;
-	
+
 	@PostMapping("/create")
 	public ResponseEntity<Department> addCategory(@RequestBody Department category) {
 		return ResponseEntity.ok(categoryService.addCategory(category));
 	}
-	
 
 	@GetMapping("/all")
 	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAllDepartments() {
-	    return ResponseEntity.ok(new ApiResponse<>("success", categoryService.getAllDepartmentsWithApplicantCount()));
+		return ResponseEntity.ok(new ApiResponse<>("success", categoryService.getAllDepartmentsWithApplicantCount()));
 	}
-	
 
-	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+		categoryService.deleteCategoryById(id);
+		return ResponseEntity.ok("Category deleted successfully.");
+	}
 
-//	@GetMapping("/{departmentId}")
-//	public ResponseEntity<ApiResponse<List<Designation>>> getDesignationsByDepartment(@PathVariable Long departmentId) {
-//	    List<Designation> designations = categoryService.getDesignationsByDepartment(departmentId);
-//	    return ResponseEntity.ok(new ApiResponse<>("success", designations));
-//	}
-
-
-	 @DeleteMapping("/delete/{id}")
-	    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-	        categoryService.deleteCategoryById(id);
-	        return ResponseEntity.ok("Category deleted successfully.");
-	    }
-	 
-	 @PutMapping("/{id}")
-	    public ResponseEntity<Department> updateCategory(@PathVariable Long id, @RequestBody Department category) {
-	        Department updatedCategory = categoryService.updateCategory(id, category);
-	        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-	    }
+	@PutMapping("/{id}")
+	public ResponseEntity<Department> updateCategory(@PathVariable Long id, @RequestBody Department category) {
+		Department updatedCategory = categoryService.updateCategory(id, category);
+		return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+	}
 }

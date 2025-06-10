@@ -64,18 +64,17 @@ public class BlogController {
 	        return ResponseEntity.ok(blogService.getBlogById(id));
 	    }
 	    
-//	    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//	    public ResponseEntity<Blog> updateBlog(
-//	            @PathVariable Long id,
-//	            @RequestParam("title") String title,
-//	            @RequestParam("shortDescription") String shortDescription,
-//	           
-//	            
-//	            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
-//
-//	        Blog updatedBlog = blogService.updateBlog(id, title, shortDescription,imageFile);
-//	        return ResponseEntity.ok(updatedBlog);
-//	    }
+	    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	    public ResponseEntity<Blog> updateBlog(@PathVariable Long id,
+	                                           @RequestParam("title") String title,
+	                                           @RequestParam("shortDescription") String shortDescription,
+	                                           @RequestParam("paragraphss") List<String> paragraphss,
+	                                           @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+	        Blog updatedBlog = blogService.updateBlog(id, title, shortDescription, paragraphss, imageFile);
+	        return ResponseEntity.ok(updatedBlog);
+	    }
+
 
 	    
 	    @GetMapping("/similar/{id}")
