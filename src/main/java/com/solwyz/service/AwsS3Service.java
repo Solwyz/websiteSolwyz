@@ -1,5 +1,6 @@
 package com.solwyz.service;
 
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,7 +9,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -28,19 +28,16 @@ public class AwsS3Service {
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        // Build the S3 PutObjectRequest with public-read access
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
-                .acl(ObjectCannedACL.PUBLIC_READ) // 👈 make it publicly accessible
+                // Remove .acl() because your bucket doesn't allow ACLs
                 .contentType(file.getContentType())
                 .build();
 
-        // Upload to S3
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(
                 file.getInputStream(), file.getSize()));
 
-        // Let AWS SDK generate the public URL
         return s3Client.utilities().getUrl(GetUrlRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)

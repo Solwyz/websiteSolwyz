@@ -1,9 +1,12 @@
 package com.solwyz.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +28,9 @@ public class Audit {
 	private String websiteUrl;
 	private String phoneNo;
 	
+	@ElementCollection
+	@Column(name = "goals")
+	private List<String> goals;
 	
 	@CreationTimestamp
 	private LocalDate createdAt;
@@ -123,6 +129,16 @@ public class Audit {
 	public Audit() {
 		super();
 		
+	}
+
+
+	public List<String> getGoals() {
+		return goals;
+	}
+
+
+	public void setGoals(List<String> goals) {
+		this.goals = goals;
 	}
 	
 

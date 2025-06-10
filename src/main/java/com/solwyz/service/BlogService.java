@@ -19,21 +19,24 @@ public class BlogService {
 	@Autowired
     private BlogRepository blogRepository;
 
+
     @Autowired
-    private Cloudinary cloudinary;
+    private AwsS3Service awsS3Service;
 
-
+    
     public Blog addBlog(Blog blog, MultipartFile imageFile) {
         try {
-            Map<String, Object> uploadResult = cloudinary.uploader()
-                    .upload(imageFile.getBytes(), ObjectUtils.emptyMap());
-
-            blog.setImage((String) uploadResult.get("secure_url"));
+            String imageUrl = awsS3Service.uploadFile(imageFile);
+            blog.setImage(imageUrl);
+            
             return blogRepository.save(blog);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload blog image", e);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to upload blog image to S3", e);
         }
     }
+
+
 
     public List<Blog> getAllBlog() {
         return blogRepository.findAll();
@@ -44,25 +47,31 @@ public class BlogService {
                 .orElseThrow(() -> new RuntimeException("Blog not found with id: " + id));
     }
 
-    public Blog updateBlog(Long id, String title, String shortDescription, String blogShortDescription, MultipartFile imageFile) {
-        Blog blog = getBlogById(id);  
 
-        blog.setTitle(title);
-        blog.setShortDescription(shortDescription);
-        blog.setBlogShortDescription(blogShortDescription);
+   
+   
+//    public Blog updateBlog(Long id, String title, String shortDescription, String blogShortDescription, MultipartFile imageFile) {
+//        Blog existingBlog = blogRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Blog not found with id " + id));
+//
+//        existingBlog.setTitle(title);
+//        existingBlog.setShortDescription(shortDescription);
+//        existingBlog.setBlogShortDescription(blogShortDescription);
+//       // existingBlog.setParagraph(paragraph);
+//
+//        if (imageFile != null && !imageFile.isEmpty()) {
+//            try {
+//                String imageUrl = awsS3Service.uploadFile(imageFile);
+//                existingBlog.setImage(imageUrl);
+//            } catch (IOException e) {
+//                
+//                throw new RuntimeException("Failed to upload image", e);
+//            }
+//        }
+//
+//        return blogRepository.save(existingBlog);
+//    }
 
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                Map<String, Object> uploadResult = cloudinary.uploader()
-                        .upload(imageFile.getBytes(), ObjectUtils.emptyMap());
-                blog.setImage((String) uploadResult.get("secure_url"));
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to upload blog image", e);
-            }
-        }
-
-        return blogRepository.save(blog);
-    }
 
     public void deleteBlog(Long id) {
         if (!blogRepository.existsById(id)) {
@@ -73,4 +82,9 @@ public class BlogService {
     public List<Blog> getSimilarBlogs(Long excludedId) {
         return blogRepository.findTop3ByIdNotOrderByCreatedAtDesc(excludedId);
     }
-}
+
+
+   
+   
+
+    }

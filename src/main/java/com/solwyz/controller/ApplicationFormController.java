@@ -52,6 +52,7 @@ public class ApplicationFormController {
 	    return ResponseEntity.status(HttpStatus.OK).body(savedApplication);
 	}
 
+
     @GetMapping("/all")
     public ResponseEntity<List<ApplicationForm>> getAllApplications() {
         List<ApplicationForm> applications = applicationFormService.getAllApplications();
@@ -76,21 +77,6 @@ public class ApplicationFormController {
 
 
 
-//    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<ApplicationForm> updateApplication(
-//            @PathVariable Long id,
-//            @RequestParam String name,
-//            @RequestParam String email,
-//            @RequestParam String phoneNo,
-//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
-//            @RequestParam String highestQualification,
-//            @RequestPart(value = "resume", required = false) MultipartFile resumeFile) throws IOException {
-//
-//        ApplicationForm updatedApplication = applicationFormService.updateApplication(
-//                id, name, email, phoneNo, dateOfBirth, highestQualification, resumeFile);
-//
-//        return ResponseEntity.ok(updatedApplication);
-//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteApplication(@PathVariable Long id) {

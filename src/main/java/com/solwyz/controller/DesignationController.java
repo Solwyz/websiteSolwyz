@@ -60,7 +60,7 @@ public class DesignationController {
         return new ResponseEntity<>(new ApiResponse<>("Designation updated successfully", updatedDesignation), HttpStatus.OK);
     }
     
-    @PatchMapping("status/{id}")
+    @PutMapping("/status/{id}")
     public ResponseEntity<Designation> updateDesignationStatus(
             @PathVariable Long id,
             @RequestParam Status status) {

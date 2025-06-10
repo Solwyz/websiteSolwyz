@@ -1,10 +1,12 @@
 package com.solwyz.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,18 @@ public class Blog {
     private String title;
     @Column(length = 5000)
     private String shortDescription;
-    @Column(length = 5000)
-    private String blogShortDescription;
-
+//    @Column(length = 5000)
+//    private String blogShortDescription;
+    
+//    @Column(length = 5000)
+//    private String paragraph;
+    
+    @ElementCollection
+	@Column(name = "paragh")
+	private List<String> paragraphss;
+	
+    
+    
     private String image;
 
     public Blog() {}
@@ -41,13 +52,13 @@ public class Blog {
         this.shortDescription = shortDescription;
     }
 
-    public String getBlogShortDescription() {
-        return blogShortDescription;
-    }
-
-    public void setBlogShortDescription(String blogShortDescription) {
-        this.blogShortDescription = blogShortDescription;
-    }
+//    public String getBlogShortDescription() {
+//        return blogShortDescription;
+//    }
+//
+//    public void setBlogShortDescription(String blogShortDescription) {
+//        this.blogShortDescription = blogShortDescription;
+//    }
 
 	public Long getId() {
 		return id;
@@ -80,5 +91,21 @@ public class Blog {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public List<String> getParagraphss() {
+		return paragraphss;
+	}
+
+	public void setParagraphss(List<String> paragraphss) {
+		this.paragraphss = paragraphss;
+	}
+
+//	public String getParagraph() {
+//		return paragraph;
+//	}
+//
+//	public void setParagraph(String paragraph) {
+//		this.paragraph = paragraph;
+//	}
 	
 }

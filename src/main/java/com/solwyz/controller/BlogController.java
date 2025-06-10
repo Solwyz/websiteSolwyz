@@ -33,20 +33,25 @@ public class BlogController {
 	  @Autowired
 	  private BlogService blogService;
 
+
+	  
 	  @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	    public ResponseEntity<Blog> addBlog(@RequestParam("title") String title,
-	                                        @RequestParam("shortDescription") String shortDescription,
-	                                        @RequestParam("blogShortDescription") String blogShortDescription,
-	                                        @RequestParam("image") MultipartFile imageFile) {
+	  public ResponseEntity<Blog> addBlog(@RequestParam("title") String title,
+	                                      @RequestParam("shortDescription") String shortDescription,
+	                                     
+	                                      @RequestParam("paragraphss") List<String> paragraphss,
+	                                      @RequestParam("image") MultipartFile imageFile) {
 
-	        Blog blog = new Blog();
-	        blog.setTitle(title);
-	        blog.setShortDescription(shortDescription);
-	        blog.setBlogShortDescription(blogShortDescription);
+	      Blog blog = new Blog();
+	      blog.setTitle(title);
+	      blog.setShortDescription(shortDescription);
+	     
+	      blog.setParagraphss(paragraphss);  
 
-	        Blog savedBlog = blogService.addBlog(blog, imageFile);
-	        return ResponseEntity.ok(savedBlog);
-	    }
+	      Blog savedBlog = blogService.addBlog(blog, imageFile);
+	      return ResponseEntity.ok(savedBlog);
+	  }
+
 
 	    @GetMapping("/all")
 	    public ResponseEntity<ApiResponse<List<Blog>>> getAllBlog() {
@@ -58,6 +63,20 @@ public class BlogController {
 	    public ResponseEntity<Blog> getBlogById(@PathVariable Long id) {
 	        return ResponseEntity.ok(blogService.getBlogById(id));
 	    }
+	    
+//	    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	    public ResponseEntity<Blog> updateBlog(
+//	            @PathVariable Long id,
+//	            @RequestParam("title") String title,
+//	            @RequestParam("shortDescription") String shortDescription,
+//	           
+//	            
+//	            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+//
+//	        Blog updatedBlog = blogService.updateBlog(id, title, shortDescription,imageFile);
+//	        return ResponseEntity.ok(updatedBlog);
+//	    }
+
 	    
 	    @GetMapping("/similar/{id}")
 	    public ResponseEntity<Map<String, Object>> getBlogWithSimilar(@PathVariable Long id) {
@@ -71,16 +90,7 @@ public class BlogController {
 	        return ResponseEntity.ok(response);
 	    }
 
-	    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	    public ResponseEntity<Blog> updateBlog(@PathVariable Long id,
-	                                           @RequestParam("title") String title,
-	                                           @RequestParam("shortDescription") String shortDescription,
-	                                           @RequestParam("blogShortDescription") String blogShortDescription,
-	                                           @RequestParam(value = "image", required = false) MultipartFile imageFile) {
 
-	        Blog updatedBlog = blogService.updateBlog(id, title, shortDescription, blogShortDescription, imageFile);
-	        return ResponseEntity.ok(updatedBlog);
-	    }
 
 	    @DeleteMapping("/delete/{id}")
 	    public ResponseEntity<String> deleteBlog(@PathVariable Long id) {
