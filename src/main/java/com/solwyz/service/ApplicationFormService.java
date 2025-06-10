@@ -23,8 +23,8 @@ public class ApplicationFormService {
     @Autowired
     private ApplicationFormRepository applicationFormRepository;
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
+   @Autowired
+   private AwsS3Service awsS3Service;
 
     @Autowired
     private NotificationService notificationService;
@@ -47,12 +47,13 @@ public class ApplicationFormService {
             Long departmentId, 
             MultipartFile resumeFile) throws IOException {
 
-        String resumeUrl = cloudinaryService.uploadPdf(resumeFile);
+        
+        String resumeUrl = awsS3Service.uploadFile(resumeFile);
 
         Designation designation = designationRepository.findById(designationId)
                 .orElseThrow(() -> new RuntimeException("Designation not found"));
 
-        Department department = departmentRepository.findById(departmentId)  
+        Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new RuntimeException("Department not found"));
 
         ApplicationForm applicationForm = new ApplicationForm();
@@ -61,9 +62,9 @@ public class ApplicationFormService {
         applicationForm.setPhoneNo(phoneNo);
         applicationForm.setDateOfBirth(dateOfBirth);
         applicationForm.setHighestQualification(highestQualification);
-        applicationForm.setResumeUrl(resumeUrl);
+        applicationForm.setResumeUrl(resumeUrl);  // set the S3 URL here
         applicationForm.setDesignation(designation);
-        applicationForm.setDepartment(department);  
+        applicationForm.setDepartment(department);
 
         notificationService.createNotification("New job application received");
 
@@ -79,27 +80,7 @@ public class ApplicationFormService {
         return applicationFormRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found with ID: " + id));
     }
-    
-//
-//    public ApplicationForm updateApplication(Long id, String name, String email, String phoneNo,
-//            LocalDate dateOfBirth, String highestQualification,
-//            MultipartFile resumeFile) throws IOException {
-//
-//ApplicationForm existing = applicationFormRepository.findById(id)
-//.orElseThrow(() -> new RuntimeException("Application not found with ID: " + id));
-//
-//existing.setName(name);
-//existing.setEmail(email);
-//existing.setPhoneNo(phoneNo);
-//existing.setDateOfBirth(dateOfBirth);
-//existing.setHighestQualification(highestQualification);
-//
-//if (resumeFile != null && !resumeFile.isEmpty()) {
-//existing.setResumeUrl(resumeFile.getBytes());
-//}
-//
-//return applicationFormRepository.save(existing);
-//}
+
     
     public void deleteApplication(Long id) {
         if (!applicationFormRepository.existsById(id)) {

@@ -24,6 +24,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
+
+
+
+
   <dependencies>
     <!-- Spring Boot Starters -->
     <dependency>
@@ -46,6 +50,8 @@
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
     
+
+    
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -64,6 +70,13 @@
     <artifactId>httpclient</artifactId>
     <version>4.5.14</version> <!-- latest 4.x stable -->
 </dependency>
+
+<dependency>
+    <groupId>com.github.ulisesbocchio</groupId>
+    <artifactId>jasypt-spring-boot-starter</artifactId>
+    <version>3.0.4</version>
+</dependency>
+
 
     <!-- PostgreSQL Driver (optional) -->
     <dependency>
@@ -96,6 +109,13 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+    
+    <dependency>
+    <groupId>io.github.cdimascio</groupId>
+    <artifactId>dotenv-java</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
     
      <!-- OpenAPI / Swagger UI -->
     <dependency>
