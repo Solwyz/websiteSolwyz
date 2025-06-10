@@ -37,21 +37,21 @@ public class DesignationService {
 	
 	public Designation addDesignation(Designation designation) {
 
-	    // Fetch and set department if provided with a valid ID
+	   
 	    if (designation.getDepartment() != null && designation.getDepartment().getId() != null) {
 	        Department department = departmentRepository.findById(designation.getDepartment().getId())
 	                .orElseThrow(() -> new RuntimeException("Department not found"));
 	        designation.setDepartment(department);
 	    }
 
-	    // Handle creation of new JobDetails if ID is null or zero
+	   
 	    JobDetails jobDetails = designation.getJobDetails();
 	    if (jobDetails != null) {
 	        if (jobDetails.getId() == null || jobDetails.getId() == 0) {
-	            // Treat it as a new JobDetails object
+	         
 	            jobDetails = jobDetailsRepository.save(jobDetails);
 	        } else {
-	            // Optional: allow linking an existing one
+	          
 	            jobDetails = jobDetailsRepository.findById(jobDetails.getId())
 	                    .orElseThrow(() -> new RuntimeException("JobDetails not found"));
 	        }

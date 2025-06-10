@@ -68,9 +68,6 @@ public class AuditController {
 		
 	}
 	
-//	@PutMapping("/update/{id}")
-//	public ResponseEntity<Audit>updateAudit(@PathVariable Long id, @RequestBody Audit audit){
-//		
-//	}
+
 
 }

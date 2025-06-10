@@ -50,23 +50,20 @@ public class ContactUsService {
 	
 	 
 	 public List<ContactUs> getContactsByDateRange(String startDate, String endDate) {
-		    // Parse input dates
+		   
 		    LocalDate start = LocalDate.parse(startDate);
 		    LocalDate end = LocalDate.parse(endDate);
 
-		    // Validate that start is not after end
+		    
 		    if (start.isAfter(end)) {
 		        throw new IllegalArgumentException("Start date must not be after end date");
 		    }
 
-		    // Fetch from repository
+		  
 		    return contactUsRepository.findByCreatedAtBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX));
 		}
 
 
-//	public long getEnquiryCount() {
-//		
-//		return contactUsRepository.count(); 
-//	}
+
 
 }
