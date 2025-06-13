@@ -18,8 +18,6 @@ import com.solwyz.repo.DepartmentRepository;
 import com.solwyz.repo.DesignationRepository;
 import com.solwyz.repo.JobDetailsRepository;
 
-
-
 @Service
 public class DesignationService {
 
@@ -28,39 +26,40 @@ public class DesignationService {
 
 	@Autowired
 	private DepartmentRepository departmentRepository;
-	
+
 	@Autowired
 	private JobDetailsRepository jobDetailsRepository;
-	
+
 	@Autowired
 	private ApplicationFormRepository applicantRepository;
-	
+
 	public Designation addDesignation(Designation designation) {
 
-	   
-	    if (designation.getDepartment() != null && designation.getDepartment().getId() != null) {
-	        Department department = departmentRepository.findById(designation.getDepartment().getId())
-	                .orElseThrow(() -> new RuntimeException("Department not found"));
-	        designation.setDepartment(department);
-	    }
+		if (designation.getDepartment() != null && designation.getDepartment().getId() != null) {
+			Department department = departmentRepository.findById(designation.getDepartment().getId())
+					.orElseThrow(() -> new RuntimeException("Department not found"));
 
-	   
-	    JobDetails jobDetails = designation.getJobDetails();
-	    if (jobDetails != null) {
-	        if (jobDetails.getId() == null || jobDetails.getId() == 0) {
-	         
-	            jobDetails = jobDetailsRepository.save(jobDetails);
-	        } else {
-	          
-	            jobDetails = jobDetailsRepository.findById(jobDetails.getId())
-	                    .orElseThrow(() -> new RuntimeException("JobDetails not found"));
-	        }
-	        designation.setJobDetails(jobDetails);
-	    }
+			int currentVacancy = department.getVaccancy() != null ? department.getVaccancy() : 0;
+			department.setVaccancy(currentVacancy + 1);
 
-	    return designationRepository.save(designation);
+			departmentRepository.save(department);
+
+			designation.setDepartment(department);
+		}
+
+		JobDetails jobDetails = designation.getJobDetails();
+		if (jobDetails != null) {
+			if (jobDetails.getId() == null || jobDetails.getId() == 0) {
+				jobDetails = jobDetailsRepository.save(jobDetails);
+			} else {
+				jobDetails = jobDetailsRepository.findById(jobDetails.getId())
+						.orElseThrow(() -> new RuntimeException("JobDetails not found"));
+			}
+			designation.setJobDetails(jobDetails);
+		}
+
+		return designationRepository.save(designation);
 	}
-
 
 	public List<Designation> getAllDesignation() {
 
@@ -75,77 +74,70 @@ public class DesignationService {
 	}
 
 	public Designation updateDesignation(Long id, Designation designation) {
-	    Designation existingDesignation = designationRepository.findById(id)
-	            .orElseThrow(() -> new RuntimeException(id + " does not exist"));
+		Designation existingDesignation = designationRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException(id + " does not exist"));
 
-	    existingDesignation.setName(designation.getName());
-	    existingDesignation.setExperience(designation.getExperience());
-	    existingDesignation.setStatus(designation.getStatus());
+		existingDesignation.setName(designation.getName());
+		existingDesignation.setExperience(designation.getExperience());
+		existingDesignation.setStatus(designation.getStatus());
 
-	    if (designation.getJobDetails() != null) {
-	        JobDetails existingJobDetails = existingDesignation.getJobDetails();
-	        JobDetails newJobDetails = designation.getJobDetails();
+		if (designation.getJobDetails() != null) {
+			JobDetails existingJobDetails = existingDesignation.getJobDetails();
+			JobDetails newJobDetails = designation.getJobDetails();
 
-	        if (existingJobDetails == null) {
-	            existingJobDetails = new JobDetails();
-	        }
+			if (existingJobDetails == null) {
+				existingJobDetails = new JobDetails();
+			}
 
-	        existingJobDetails.setDesignation(newJobDetails.getDesignation());
-	        existingJobDetails.setLoaction(newJobDetails.getLoaction());
-	        existingJobDetails.setExperience(newJobDetails.getExperience());
-	        existingJobDetails.setJobType(newJobDetails.getJobType());
-	        existingJobDetails.setQualification(newJobDetails.getQualification());
-	        existingJobDetails.setEmailId(newJobDetails.getEmailId());
-	        existingJobDetails.setResponsibilities(newJobDetails.getResponsibilities());
-	        existingJobDetails.setRequirements(newJobDetails.getRequirements());
+			existingJobDetails.setDesignation(newJobDetails.getDesignation());
+			existingJobDetails.setLoaction(newJobDetails.getLoaction());
+			existingJobDetails.setExperience(newJobDetails.getExperience());
+			existingJobDetails.setJobType(newJobDetails.getJobType());
+			existingJobDetails.setQualification(newJobDetails.getQualification());
+			existingJobDetails.setEmailId(newJobDetails.getEmailId());
+			existingJobDetails.setResponsibilities(newJobDetails.getResponsibilities());
+			existingJobDetails.setRequirements(newJobDetails.getRequirements());
 
-	        existingDesignation.setJobDetails(existingJobDetails);
-	    }
+			existingDesignation.setJobDetails(existingJobDetails);
+		}
 
-	   
-	    if (designation.getDepartment() != null) {
-	        existingDesignation.setDepartment(designation.getDepartment());
-	    }
+		if (designation.getDepartment() != null) {
+			existingDesignation.setDepartment(designation.getDepartment());
+		}
 
-	    return designationRepository.save(existingDesignation);
+		return designationRepository.save(existingDesignation);
 	}
-
-
-
 
 	public Designation getDesignationById(Long designationId) {
 		return designationRepository.findById(designationId)
 				.orElseThrow(() -> new ResourceNotFoundException("designation not found with id: " + designationId));
 	}
 
-
 	public List<Map<String, Object>> getDesignationsByDepartment(Long departmentId) {
-	    List<Designation> designations = designationRepository.findByDepartmentId(departmentId);
-	    List<Map<String, Object>> result = new ArrayList<>();
+		List<Designation> designations = designationRepository.findByDepartmentId(departmentId);
+		List<Map<String, Object>> result = new ArrayList<>();
 
-	    for (Designation des : designations) {
-	        long count = applicantRepository.countByDesignationId(des.getId());
+		for (Designation des : designations) {
+			long count = applicantRepository.countByDesignationId(des.getId());
 
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("id", des.getId());
-	        map.put("name", des.getName());
-	        map.put("experience", des.getExperience());
-	        map.put("applicantCount", count);
-	        map.put("status", des.getStatus());
-	        result.add(map);
-	    }
+			Map<String, Object> map = new HashMap<>();
+			map.put("id", des.getId());
+			map.put("name", des.getName());
+			map.put("experience", des.getExperience());
+			map.put("applicantCount", count);
+			map.put("status", des.getStatus());
+			result.add(map);
+		}
 
-	    return result;
+		return result;
 	}
-
 
 	public Designation updateDesignationStatus(Long id, Status newStatus) {
-	    Designation designation = designationRepository.findById(id)
-	            .orElseThrow(() -> new RuntimeException("Designation with id " + id + " not found"));
+		Designation designation = designationRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Designation with id " + id + " not found"));
 
-	    designation.setStatus(newStatus);
-	    return designationRepository.save(designation);
+		designation.setStatus(newStatus);
+		return designationRepository.save(designation);
 	}
-
 
 }
